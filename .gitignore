@@ -1,0 +1,4 @@
+env/
+results/*.csv
+graphs/*.csv
+input/*.csv
