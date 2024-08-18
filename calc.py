@@ -91,10 +91,10 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
 
     if (c_type == "degree" or c_type == 'degree_normalized'):
         c_denominator = (n_val - 1) * (n_val - 2)
-        columns.append(label + '_denominator')
-        values.append(c_denominator)
-        columns.append(label + '_denom_formula')
-        values.append('(n-1)*(n-2)')
+        #columns.append(label + '_denominator')
+        #values.append(c_denominator)
+        #columns.append(label + '_denom_formula')
+        #values.append('(n-1)*(n-2)')
 
     if (c_type == "close"):
         c_top = (n_val - 1) * (n_val - 2)
@@ -103,10 +103,10 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
 
     if (c_type == "between"):
         c_denominator = ((n_val - 1) * (n_val -1) * (n_val - 2))
-        columns.append(label + '_denominator')
-        values.append(c_denominator)
-        columns.append(label + '_denom_formula')
-        values.append('(n-1)*(n-1)*(n-2)')
+        #columns.append(label + '_denominator')
+        #values.append(c_denominator)
+        #columns.append(label + '_denom_formula')
+        #values.append('(n-1)*(n-1)*(n-2)')
 
     if (c_type == "eigen"):
         '''
@@ -120,21 +120,23 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
         c_denominator = sqrt(2) / 2 * (n_val - 2)
 
     if (c_denominator == 0):
-        values.append('null')
-        values.append('null')
+        #values.append('null')
+        #values.append('null')
+        #values.append('null')
         return None
 
     # start calculations
 
     if len(centrality.values()) == 0: 
-        values.append('null')
-        values.append('null')
+        #values.append('null')
+        #values.append('null')
+        #values.append('null')
         return 'null'
     c_node_max = max(centrality.values())
     print(label)
     print('Max node centrality: ' + str(c_node_max) + '\n')
-    columns.append(label + '_max_centrality')
-    values.append(c_node_max)
+    #columns.append(label + '_max_centrality')
+    #values.append(c_node_max)
 
     c_sorted = sorted(centrality.values(), reverse=True)
 
@@ -149,8 +151,13 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
             c_numerator += (c_node_max - value)
 
     print('Numerator:' + str(c_numerator) + "\n")
-    columns.append(label + '_numerator')
-    values.append(c_numerator)
+    #columns.append(label + '_numerator')
+    #values.append(c_numerator)
+    #columns.append(label + '_numberator_formula')
+    #if c_type == "degree_normalized":
+    #    values.append('sum of ( (max centrality * (n-1)) - (centrality value * (n-1)) )')
+    #else:
+    #    values.append('sum of (max centrality - centrality value)')
     print('Denominator:' + str(c_denominator) + "\n")
 
     network_centrality = float(c_numerator / c_denominator)
@@ -246,11 +253,11 @@ for patientId in patientIds:
     #reasoning: the <patientId>_icu/ward.csv graph files are already constructed
     #as a list of edges (with weights).  The total entries are already the total edges.
     print('manual number of edges icu: ' + str(len(data_icu)))
-    man_column_names.append('man_number_edges_icu')
-    man_values.append(len(data_icu))
+    #man_column_names.append('man_number_edges_icu')
+    #man_values.append(len(data_icu))
     print('manual number of edges ward: ' + str(len(data_ward)))
-    man_column_names.append('man_number_edges_ward')
-    man_values.append(len(data_ward))
+    #man_column_names.append('man_number_edges_ward')
+    #man_values.append(len(data_ward))
     
 
     if (nx.number_of_nodes(g_icu) != 0):
@@ -374,15 +381,15 @@ for patientId in patientIds:
     man_column_names.append('man_degree_centralization_icu')
     man_values.append(man_degree_centralization_icu)
           
-    man_indegree_centralization_icu = getCentralization(man_indegree_icu, 'degree', 'man_indegree_centralization_icu', man_column_names, man_values, size)
-    print('manual in degree centralization icu: ' + str(man_indegree_centralization_icu))
-    man_column_names.append('man_indegree_centralization_icu')
-    man_values.append(man_indegree_centralization_icu)
+    #man_indegree_centralization_icu = getCentralization(man_indegree_icu, 'degree', 'man_indegree_centralization_icu', man_column_names, man_values, size)
+    #print('manual in degree centralization icu: ' + str(man_indegree_centralization_icu))
+    #man_column_names.append('man_indegree_centralization_icu')
+    #man_values.append(man_indegree_centralization_icu)
 
-    man_outdegree_centralization_icu = getCentralization(man_outdegree_icu, 'degree', 'man_outdegree_centralization_icu', man_column_names, man_values, size)
-    print('manual out degree centralization icu: ' + str(man_outdegree_centralization_icu))
-    man_column_names.append('man_outdegree_centralization_icu')
-    man_values.append(man_outdegree_centralization_icu)
+    #man_outdegree_centralization_icu = getCentralization(man_outdegree_icu, 'degree', 'man_outdegree_centralization_icu', man_column_names, man_values, size)
+    #print('manual out degree centralization icu: ' + str(man_outdegree_centralization_icu))
+    #man_column_names.append('man_outdegree_centralization_icu')
+    #man_values.append(man_outdegree_centralization_icu)
 
 
     name_list = []
@@ -415,15 +422,15 @@ for patientId in patientIds:
     man_column_names.append('man_degree_centralization_ward')
     man_values.append(man_degree_centralization_ward)
           
-    man_indegree_centralization_ward = getCentralization(man_indegree_ward, 'degree', 'man_indegree_centralization_ward', man_column_names, man_values, size)
-    print('manual in degree centralization ward: ' + str(man_indegree_centralization_ward))
-    man_column_names.append('man_indegree_centralization_ward')
-    man_values.append(man_indegree_centralization_ward)
+    #man_indegree_centralization_ward = getCentralization(man_indegree_ward, 'degree', 'man_indegree_centralization_ward', man_column_names, man_values, size)
+    #print('manual in degree centralization ward: ' + str(man_indegree_centralization_ward))
+    #man_column_names.append('man_indegree_centralization_ward')
+    #man_values.append(man_indegree_centralization_ward)
 
-    man_outdegree_centralization_ward = getCentralization(man_outdegree_ward, 'degree', 'man_outdegree_centralization_ward', man_column_names, man_values, size)
-    print('manual out degree centralization ward: ' + str(man_outdegree_centralization_ward))
-    man_column_names.append('man_outdegree_centralization_ward')
-    man_values.append(man_outdegree_centralization_ward)
+    #man_outdegree_centralization_ward = getCentralization(man_outdegree_ward, 'degree', 'man_outdegree_centralization_ward', man_column_names, man_values, size)
+    #print('manual out degree centralization ward: ' + str(man_outdegree_centralization_ward))
+    #man_column_names.append('man_outdegree_centralization_ward')
+    #man_values.append(man_outdegree_centralization_ward)
 
     
     
@@ -438,6 +445,8 @@ for patientId in patientIds:
         values.append(getCentralization(outdegree_centrality, 'degree_normalized'))
     else:
         values.append('null')
+        values.append('null')
+        values.append('null')
     if (nx.number_of_nodes(g_ward) != 0):
         degree_centrality = nx.degree_centrality(g_ward)
         indegree_centrality = nx.in_degree_centrality(g_ward)
@@ -446,6 +455,8 @@ for patientId in patientIds:
         values.append(getCentralization(indegree_centrality, 'degree_normalized'))
         values.append(getCentralization(outdegree_centrality, 'degree_normalized'))
     else:
+        values.append('null')
+        values.append('null')
         values.append('null')
 
 
@@ -460,10 +471,11 @@ for patientId in patientIds:
         man_values.append(betweenness_centralization)
     else:
         values.append('null')
-        man_values.append('null')
-        man_values.append('null')
-        man_values.append('null')
-        man_values.append('null')
+        #man_values.append('null')
+        #man_values.append('null')
+        #man_values.append('null')
+        #man_values.append('null')
+        #man_values.append('null')
         man_values.append('null')
     if (nx.number_of_nodes(g_ward) != 0):
         betweenness_centrality_ward = nx.betweenness_centrality(g_ward, normalized=False)
@@ -475,10 +487,11 @@ for patientId in patientIds:
         man_values.append(betweenness_centralization)
     else:
         values.append('null')
-        man_values.append('null')
-        man_values.append('null')
-        man_values.append('null')
-        man_values.append('null')
+        #man_values.append('null')
+        #man_values.append('null')
+        #man_values.append('null')
+        #man_values.append('null')
+        #man_values.append('null')
         man_values.append('null')
 
     create_csv([man_centrality_icu, man_indegree_icu, man_outdegree_icu, man_centrality_ward, man_indegree_ward, man_outdegree_ward,
