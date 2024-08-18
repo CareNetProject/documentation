@@ -38,19 +38,19 @@ for filename in os.listdir('input/'):
 df_full = df_full.reset_index(drop=True)
 
 #drop null rows for accessor/accessee
-df_full = df_full.dropna(subset=['ACCESS_USER_NAME'])
-df_full = df_full.dropna(subset=['NOTE_AUTHOR_NAME'])
+df_full = df_full.dropna(subset=['DEID_ACCESS_USER_NAME'])
+df_full = df_full.dropna(subset=['DEID_NOTE_AUTHOR_NAME'])
 
 #remove any non-human names listed in exclude.txt
 with open('exclude.txt', 'r') as file:
     for line in file:
         line = line.rstrip('\n')
-        df_full = df_full[~df_full['ACCESS_USER_NAME'].str.contains(line)]
-        df_full = df_full[~df_full['NOTE_AUTHOR_NAME'].str.contains(line)]
+        df_full = df_full[~df_full['DEID_ACCESS_USER_NAME'].str.contains(line)]
+        df_full = df_full[~df_full['DEID_NOTE_AUTHOR_NAME'].str.contains(line)]
 
 
 #group by patientID
-grouped_df = df_full.groupby('DeId_PAT_MRN_ID')
+grouped_df = df_full.groupby('DEID_PAT_MRN_ID')
 
 for id_value, df in grouped_df:
 
@@ -61,8 +61,8 @@ for id_value, df in grouped_df:
 
     associatedTimes = {}
     for i in df.index:
-        fromName = extractName(df['ACCESS_USER_NAME'][i])
-        toName = extractName(df['NOTE_AUTHOR_NAME'][i])
+        fromName = extractName(df['DEID_ACCESS_USER_NAME'][i])
+        toName = extractName(df['DEID_NOTE_AUTHOR_NAME'][i])
 
         #exclude when from and to are same person
         if (fromName != toName):
