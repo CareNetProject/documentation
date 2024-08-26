@@ -186,7 +186,7 @@ final_calc = open('results/auto_calcs.csv', 'w+')
 man_calc = open('results/man_calcs.csv', 'w+')
 writer = csv.writer(final_calc)
 man_writer = csv.writer(man_calc)
-column_names = ["patientID", "number_of_nodes_in_icu",	"number_of_nodes_in_ward",	"number_of_edges_in_icu",	"number_of_edges_in_ward",	"network_density_in_icu",	"network_density_in_ward",	"network_reciprocity_in_icu",	"network_reciprocity_in_ward",	"degree_centralization_in_icu",	"degree_centralization_in_ward", "betweenness_centralization_in_icu",	"betweenness_centralization_in_ward"]
+column_names = ["deid_patientID", "number_of_nodes_in_icu",	"number_of_nodes_in_ward",	"number_of_edges_in_icu",	"number_of_edges_in_ward",	"network_density_in_icu",	"network_density_in_ward",	"network_reciprocity_in_icu",	"network_reciprocity_in_ward",	"degree_centralization_in_icu",	"degree_centralization_in_ward", "betweenness_centralization_in_icu",	"betweenness_centralization_in_ward"]
 
 #Please note: man_column_names was created this way when this script was used for 1 record at a time
 #As long as the first record has the correct columns, this will work as-is.
@@ -221,7 +221,7 @@ for patientId in patientIds:
 
     values = []
     man_values = []
-    man_column_names.append('patientId')
+    man_column_names.append('deid_patientId')
     values.append(patientId)
     man_values.append(patientId)
 
