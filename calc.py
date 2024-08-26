@@ -39,7 +39,7 @@ def create_csv(list_of_dicts, patientId):
         for key, values in combined_dict.items():
             csvwriter.writerow([key] + values)
     
-    print(f"Data from dictionaries has been saved to {csv_file_path}")
+    #print(f"Data from dictionaries has been saved to {csv_file_path}")
 
 
 
@@ -91,10 +91,10 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
 
     if (c_type == "degree" or c_type == 'degree_normalized'):
         c_denominator = (n_val - 1) * (n_val - 2)
-        #columns.append(label + '_denominator')
-        #values.append(c_denominator)
-        #columns.append(label + '_denom_formula')
-        #values.append('(n-1)*(n-2)')
+        columns.append(label + '_denominator')
+        values.append(c_denominator)
+        columns.append(label + '_denom_formula')
+        values.append('(n-1)*(n-2)')
 
     if (c_type == "close"):
         c_top = (n_val - 1) * (n_val - 2)
@@ -103,10 +103,10 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
 
     if (c_type == "between"):
         c_denominator = ((n_val - 1) * (n_val -1) * (n_val - 2))
-        #columns.append(label + '_denominator')
-        #values.append(c_denominator)
-        #columns.append(label + '_denom_formula')
-        #values.append('(n-1)*(n-1)*(n-2)')
+        columns.append(label + '_denominator')
+        values.append(c_denominator)
+        columns.append(label + '_denom_formula')
+        values.append('(n-1)*(n-1)*(n-2)')
 
     if (c_type == "eigen"):
         '''
@@ -120,23 +120,25 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
         c_denominator = sqrt(2) / 2 * (n_val - 2)
 
     if (c_denominator == 0):
-        #values.append('null')
-        #values.append('null')
-        #values.append('null')
+        values.append('null')
+        values.append('null')
+        values.append('null')
+        values.append('null')
+        values.append('null')
         return None
 
     # start calculations
 
     if len(centrality.values()) == 0: 
-        #values.append('null')
-        #values.append('null')
-        #values.append('null')
+        values.append('null')
+        values.append('null')
+        values.append('null')
+        values.append('null')
+        values.append('null')
         return 'null'
     c_node_max = max(centrality.values())
-    print(label)
-    print('Max node centrality: ' + str(c_node_max) + '\n')
-    #columns.append(label + '_max_centrality')
-    #values.append(c_node_max)
+    columns.append(label + '_max_centrality')
+    values.append(c_node_max)
 
     c_sorted = sorted(centrality.values(), reverse=True)
 
@@ -150,15 +152,13 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
         else:
             c_numerator += (c_node_max - value)
 
-    print('Numerator:' + str(c_numerator) + "\n")
-    #columns.append(label + '_numerator')
-    #values.append(c_numerator)
-    #columns.append(label + '_numberator_formula')
-    #if c_type == "degree_normalized":
-    #    values.append('sum of ( (max centrality * (n-1)) - (centrality value * (n-1)) )')
-    #else:
-    #    values.append('sum of (max centrality - centrality value)')
-    print('Denominator:' + str(c_denominator) + "\n")
+    columns.append(label + '_numerator')
+    values.append(c_numerator)
+    columns.append(label + '_numberator_formula')
+    if c_type == "degree_normalized":
+        values.append('sum of ( (max centrality * (n-1)) - (centrality value * (n-1)) )')
+    else:
+        values.append('sum of (max centrality - centrality value)')
 
     network_centrality = float(c_numerator / c_denominator)
 
@@ -186,7 +186,7 @@ final_calc = open('results/auto_calcs.csv', 'w+')
 man_calc = open('results/man_calcs.csv', 'w+')
 writer = csv.writer(final_calc)
 man_writer = csv.writer(man_calc)
-column_names = ["patientID", "number_of_nodes_in_icu",	"number_of_nodes_in_ward",	"number_of_edges_in_icu",	"number_of_edges_in_ward",	"network_density_in_icu",	"network_density_in_ward",	"network_reciprocity_in_icu",	"network_reciprocity_in_ward",	"degree_centralization_in_icu", "in_degree_centralization_in_icu", "out_degree_centralization_in_icu",	"degree_centralization_in_ward", "in_degree_centralization_in_ward", "out_degree_centralization_in_ward", "betweenness_centralization_in_icu",	"betweenness_centralization_in_ward",	"is_strongly_connected_in_icu_true_false",	"is_strongly_connected_in_ward_true_false",	"number_strongly_connected_components_in_icu",	"number_strongly_connected_components_in_ward", "is_weakly_connected_in_icu_true_false",	"is_weakly_connected_in_ward_true_false",	"number_weakly_connected_components_in_icu",	"number_weakly_connected_components_in_ward"]
+column_names = ["patientID", "number_of_nodes_in_icu",	"number_of_nodes_in_ward",	"number_of_edges_in_icu",	"number_of_edges_in_ward",	"network_density_in_icu",	"network_density_in_ward",	"network_reciprocity_in_icu",	"network_reciprocity_in_ward",	"degree_centralization_in_icu",	"degree_centralization_in_ward", "betweenness_centralization_in_icu",	"betweenness_centralization_in_ward"]
 
 #Please note: man_column_names was created this way when this script was used for 1 record at a time
 #As long as the first record has the correct columns, this will work as-is.
@@ -231,10 +231,8 @@ for patientId in patientIds:
     man_nodes_icu = combine_unique_values(data_icu)
     man_nodes_ward = combine_unique_values(data_ward)
     #then get a count of the unique providers 
-    print('manual number of nodes icu: ' + str(len(man_nodes_icu)))
     man_column_names.append('man_number_nodes_icu')
     man_values.append(len(man_nodes_icu))
-    print('manual number of nodes ward: ' + str(len(man_nodes_ward)))
     man_column_names.append('man_number_nodes_ward')
     man_values.append(len(man_nodes_ward))
 
@@ -252,10 +250,8 @@ for patientId in patientIds:
     #manual number of eddges
     #reasoning: the <patientId>_icu/ward.csv graph files are already constructed
     #as a list of edges (with weights).  The total entries are already the total edges.
-    print('manual number of edges icu: ' + str(len(data_icu)))
     #man_column_names.append('man_number_edges_icu')
     #man_values.append(len(data_icu))
-    print('manual number of edges ward: ' + str(len(data_ward)))
     #man_column_names.append('man_number_edges_ward')
     #man_values.append(len(data_ward))
     
@@ -283,10 +279,8 @@ for patientId in patientIds:
         man_density_ward = (len(data_ward)) / (len(man_nodes_ward) * (len(man_nodes_ward) - 1))
     else:
         man_density_ward = 'null'
-    print('manual density icu: ' + str(man_density_icu))
     man_column_names.append('man_density_icu')
     man_values.append(man_density_icu)
-    print('manual density ward: ' + str(man_density_ward))
     man_column_names.append('man_density_ward')
     man_values.append(man_density_ward)
     
@@ -308,10 +302,8 @@ for patientId in patientIds:
     #This behavior does match what networkX will return
     man_recip_edges_icu = count_reverse_pairs(data_icu)
     man_recip_edges_ward = count_reverse_pairs(data_ward)
-    print('manual number of reciprocated edges icu: ' + str(len(man_recip_edges_icu)))
     man_column_names.append('man_reciprocated_edges_icu')
     man_values.append(len(man_recip_edges_icu))
-    print('manual number of reciprocated edges ward: ' + str(len(man_recip_edges_ward)))
     man_column_names.append('man_reciprocated_edges_ward')
     man_values.append(len(man_recip_edges_ward))
 
@@ -325,10 +317,8 @@ for patientId in patientIds:
         man_reciprocity_ward = len(man_recip_edges_ward) / len(data_ward)
     else:
         man_reciprocity_ward = 'null'
-    print('manual reciprocity icu: ' + str(man_reciprocity_icu))
     man_column_names.append('man_reciprocity_icu')
     man_values.append(man_reciprocity_icu)
-    print('manual reciprocity ward: ' + str(man_reciprocity_ward))
     man_column_names.append('man_reciprocity_ward')
     man_values.append(man_reciprocity_ward)
 
@@ -377,7 +367,6 @@ for patientId in patientIds:
             man_outdegree_icu[element] = 0
 
     man_degree_centralization_icu = getCentralization(man_centrality_icu, 'degree', 'man_degree_centralization_icu', man_column_names, man_values, size)
-    print('manual degree centralization icu: ' + str(man_degree_centralization_icu))
     man_column_names.append('man_degree_centralization_icu')
     man_values.append(man_degree_centralization_icu)
           
@@ -416,9 +405,7 @@ for patientId in patientIds:
         if element not in man_outdegree_ward:
             man_outdegree_ward[element] = 0
 
-    print(man_centrality_ward)
     man_degree_centralization_ward = getCentralization(man_centrality_ward, 'degree', 'man_degree_centralization_ward', man_column_names, man_values, size)
-    print('manual degree centralization ward: ' + str(man_degree_centralization_ward))
     man_column_names.append('man_degree_centralization_ward')
     man_values.append(man_degree_centralization_ward)
           
@@ -441,23 +428,23 @@ for patientId in patientIds:
         outdegree_centrality = nx.out_degree_centrality(g_icu)
         #so we changed the getCentralization to account for this
         values.append(getCentralization(degree_centrality, 'degree_normalized'))
-        values.append(getCentralization(indegree_centrality, 'degree_normalized'))
-        values.append(getCentralization(outdegree_centrality, 'degree_normalized'))
+        #values.append(getCentralization(indegree_centrality, 'degree_normalized'))
+        #values.append(getCentralization(outdegree_centrality, 'degree_normalized'))
     else:
         values.append('null')
-        values.append('null')
-        values.append('null')
+        #values.append('null')
+        #values.append('null')
     if (nx.number_of_nodes(g_ward) != 0):
         degree_centrality = nx.degree_centrality(g_ward)
         indegree_centrality = nx.in_degree_centrality(g_ward)
         outdegree_centrality = nx.out_degree_centrality(g_ward)
         values.append(getCentralization(degree_centrality, 'degree_normalized'))
-        values.append(getCentralization(indegree_centrality, 'degree_normalized'))
-        values.append(getCentralization(outdegree_centrality, 'degree_normalized'))
+        #values.append(getCentralization(indegree_centrality, 'degree_normalized'))
+        #values.append(getCentralization(outdegree_centrality, 'degree_normalized'))
     else:
         values.append('null')
-        values.append('null')
-        values.append('null')
+        #values.append('null')
+        #values.append('null')
 
 
     if (nx.number_of_nodes(g_icu) != 0):
@@ -466,32 +453,30 @@ for patientId in patientIds:
         betweenness_centralization = getCentralization(betweenness_centrality_icu, 'between', 'man_betweenness_centralization_icu', man_column_names, man_values) 
         values.append(betweenness_centralization)
 
-        print('manual betweenness centralization icu: ' + str(betweenness_centralization))
         man_column_names.append('man_betweenness_centralization_icu')
         man_values.append(betweenness_centralization)
     else:
         values.append('null')
-        #man_values.append('null')
-        #man_values.append('null')
-        #man_values.append('null')
-        #man_values.append('null')
-        #man_values.append('null')
+        man_values.append('null')
+        man_values.append('null')
+        man_values.append('null')
+        man_values.append('null')
+        man_values.append('null')
         man_values.append('null')
     if (nx.number_of_nodes(g_ward) != 0):
         betweenness_centrality_ward = nx.betweenness_centrality(g_ward, normalized=False)
         betweenness_centralization = getCentralization(betweenness_centrality_ward, 'between', 'man_betweenness_centralization_ward', man_column_names, man_values) 
         values.append(betweenness_centralization)
 
-        print('manual betweenness centralization ward: ' + str(betweenness_centralization))
         man_column_names.append('man_betweenness_centralization_ward')
         man_values.append(betweenness_centralization)
     else:
         values.append('null')
-        #man_values.append('null')
-        #man_values.append('null')
-        #man_values.append('null')
-        #man_values.append('null')
-        #man_values.append('null')
+        man_values.append('null')
+        man_values.append('null')
+        man_values.append('null')
+        man_values.append('null')
+        man_values.append('null')
         man_values.append('null')
 
     create_csv([man_centrality_icu, man_indegree_icu, man_outdegree_icu, man_centrality_ward, man_indegree_ward, man_outdegree_ward,
@@ -507,52 +492,52 @@ for patientId in patientIds:
     
     #component analysis
     
-    if (nx.number_of_nodes(g_icu) != 0):
-        is_strongly_connected = nx.is_strongly_connected(g_icu)
-        values.append(is_strongly_connected)
-    else:
-        values.append('null')
-    if (nx.number_of_nodes(g_ward) != 0):
-        is_strongly_connected = nx.is_strongly_connected(g_ward)
-        values.append(is_strongly_connected)
-    else:
-        values.append('null')
-    
-    if (nx.number_of_nodes(g_icu) != 0):
-        number_strongly_connected_components = nx.number_strongly_connected_components(g_icu)
-        values.append(number_strongly_connected_components)
-    else:
-        values.append('null')
-    if (nx.number_of_nodes(g_ward) != 0):
-        number_strongly_connected_components = nx.number_strongly_connected_components(g_ward)
-        values.append(number_strongly_connected_components)
-    else:
-        values.append('null')
+    #if (nx.number_of_nodes(g_icu) != 0):
+    #    is_strongly_connected = nx.is_strongly_connected(g_icu)
+    #    values.append(is_strongly_connected)
+    #else:
+    #    values.append('null')
+    #if (nx.number_of_nodes(g_ward) != 0):
+    #    is_strongly_connected = nx.is_strongly_connected(g_ward)
+    #    values.append(is_strongly_connected)
+    #else:
+    #    values.append('null')
+    #
+    #if (nx.number_of_nodes(g_icu) != 0):
+    #    number_strongly_connected_components = nx.number_strongly_connected_components(g_icu)
+    #    values.append(number_strongly_connected_components)
+    #else:
+    #    values.append('null')
+    #if (nx.number_of_nodes(g_ward) != 0):
+    #    number_strongly_connected_components = nx.number_strongly_connected_components(g_ward)
+    #    values.append(number_strongly_connected_components)
+    #else:
+    #    values.append('null')
     
     #strongly_connected_components = nx.strongly_connected_components(g)
     #file.write('Strongly connected components: ' + str(strongly_connected_components) + '\n')
     
-    if (nx.number_of_nodes(g_icu) != 0):
-        is_weakly_connected = nx.is_weakly_connected(g_icu)
-        values.append(is_weakly_connected)
-    else:
-        values.append('null')
-    if (nx.number_of_nodes(g_ward) != 0):
-        is_weakly_connected = nx.is_weakly_connected(g_ward)
-        values.append(is_weakly_connected)
-    else:
-        values.append('null')
-    
-    if (nx.number_of_nodes(g_icu) != 0):
-        number_weakly_connected_components = nx.number_weakly_connected_components(g_icu)
-        values.append(number_weakly_connected_components)
-    else:
-        values.append('null')
-    if (nx.number_of_nodes(g_ward) != 0):
-        number_weakly_connected_components = nx.number_weakly_connected_components(g_ward)
-        values.append(number_weakly_connected_components)
-    else:
-        values.append('null')
+    #if (nx.number_of_nodes(g_icu) != 0):
+    #    is_weakly_connected = nx.is_weakly_connected(g_icu)
+    #    values.append(is_weakly_connected)
+    #else:
+    #    values.append('null')
+    #if (nx.number_of_nodes(g_ward) != 0):
+    #    is_weakly_connected = nx.is_weakly_connected(g_ward)
+    #    values.append(is_weakly_connected)
+    #else:
+    #    values.append('null')
+    #
+    #if (nx.number_of_nodes(g_icu) != 0):
+    #    number_weakly_connected_components = nx.number_weakly_connected_components(g_icu)
+    #    values.append(number_weakly_connected_components)
+    #else:
+    #    values.append('null')
+    #if (nx.number_of_nodes(g_ward) != 0):
+    #    number_weakly_connected_components = nx.number_weakly_connected_components(g_ward)
+    #    values.append(number_weakly_connected_components)
+    #else:
+    #    values.append('null')
     
     #weakly_connected_components = nx.weakly_connected_components(g)
     #file.write('Weakly connected components: ' + str(weakly_connected_components) + '\n')
@@ -578,6 +563,7 @@ for patientId in patientIds:
 
 
 final_calc.close()
+print("Results saved in 'results' folder")
 
 # Now to split the centrality scores into separate files
 """
