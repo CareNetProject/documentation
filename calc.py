@@ -154,7 +154,7 @@ def getCentralization(centrality, c_type, label='none', columns=[], values=[], s
 
     columns.append(label + '_numerator')
     values.append(c_numerator)
-    columns.append(label + '_numberator_formula')
+    columns.append(label + '_numerator_formula')
     if c_type == "degree_normalized":
         values.append('sum of ( (max centrality * (n-1)) - (centrality value * (n-1)) )')
     else:
